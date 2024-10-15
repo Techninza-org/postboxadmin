@@ -7,6 +7,7 @@ import {
   UserRound,
   Settings,
   IndianRupee,
+  FileClock,
 } from "lucide-react";
 import { Nav } from "../ui/nav";
 import { Button } from "../ui/button";
@@ -63,6 +64,12 @@ const Sidebar = () => {
             title: "Transactions",
             href: "/transections",
             icon: IndianRupee ,
+            variant: "ghost",
+          },
+          {
+            title: "Log Files",
+            href: "/logfile",
+            icon: FileClock,
             variant: "ghost",
           },
           {

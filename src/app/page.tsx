@@ -20,13 +20,14 @@ interface CardData {
 
 export default function Home() {
   const [data, setData] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const token = getCookie("authtoken") as string; // Ensure token is a string
 
   // Fetch user data from the API
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://103.119.171.226:4000/admin/totalData", {
           headers: { Authorization: `Bearer ${token}` },
@@ -71,9 +72,8 @@ export default function Home() {
 
   return (
     <NavigationBar>
-     
       <div className="flex flex-col w-[90vw] gap-4 pt-20 px-10">
-      {loading && <Loading />}
+        {loading && <Loading />}
       {error && <p className="text-red-500">{error}</p>}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2 mt-5 transition-all h-[500px]">
           {cardData.map((card, index) => (

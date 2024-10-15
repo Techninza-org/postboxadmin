@@ -3,9 +3,7 @@
 import { DataTable } from "@/components/DataTable";
 import Title from "@/components/Title";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, ShieldCheck, ShieldBan, UserRoundPen,MoreHorizontal, ArrowUpDown } from "lucide-react";
-
-
+import {MoreHorizontal, ArrowUpDown } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCookie } from "cookies-next";
@@ -99,11 +97,6 @@ const UserPage = () => {
       setLoading(false);
     }
   };
-
-
-  
-
-
 
 
   // Define columns for the data table
