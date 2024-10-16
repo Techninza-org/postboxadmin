@@ -26,7 +26,7 @@ import Loading from "@/components/loading";
 interface Post {
   _id: string;
   caption: string;
-  image: string[];
+  image: string[]; // Array of images
   likes: any[];
   comments: Comment[];
   isDeleted: boolean;
@@ -210,7 +210,7 @@ const UserPost: React.FC = () => {
           {currentPosts.map((post) => (
             <div key={post._id} className="relative group">
               <CardContent className="bg-white p-4 shadow-md rounded-lg">
-                {post.image.length > 0 && (
+                {post.image && post.image.length > 0 && (
                   <Carousel className="w-full max-w-xs">
                     <CarouselContent>
                       {post.image.map((image: string) => (
@@ -244,8 +244,8 @@ const UserPost: React.FC = () => {
                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
                     onClick={() => toggleComments(post._id)}
                   >
-                    <MessageSquareMore className="inline-block mr-2" />
-                    ({post.comments.length})
+                    <MessageSquareMore className="inline-block mr-2" />(
+                    {post.comments.length})
                   </button>
                   <button
                     className={`${
@@ -279,7 +279,9 @@ const UserPost: React.FC = () => {
           </p>
           <button
             className={`px-4 py-2 rounded ${
-              currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 text-white"
+              currentPage === totalPages
+                ? "bg-gray-300"
+                : "bg-blue-500 text-white"
             }`}
             disabled={currentPage === totalPages}
             onClick={handleNextPage}
@@ -287,52 +289,46 @@ const UserPost: React.FC = () => {
             <ChevronRight />
           </button>
         </div>
-
-        {/* Comments Modal */}
-        {showModal && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-900 bg-opacity-75 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
-              <h3 className="text-xl font-bold mb-4">Comments</h3>
-              <button
-                className="absolute top-10 right-10 bg-white rounded-full text-gray-500 hover:text-gray-800"
-                onClick={closeModal}
-                aria-label="Close"
-              >
-                <X />
-              </button>
-              {activePost &&
-                posts
-                  .find((post) => post._id === activePost)
-                  ?.comments.map((comment) => (
-                    <div
-                      key={comment._id}
-                      className={`border p-4 rounded mb-4 ${
-                        comment.isDeActivated ? "bg-gray-200" : "bg-white"
-                      }`}
-                    >
-                      <p>{comment.comment}</p>
-                      <button
-                        className={`mt-2 ${
-                          comment.isDeActivated
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                        } text-white px-2 py-1 rounded`}
-                        onClick={() =>
-                          toggleCommentStatus(comment._id, comment.isDeActivated)
-                        }
-                      >
-                        {comment.isDeActivated ? (
-                          <ShieldCheck />
-                        ) : (
-                          <ShieldOff />
-                        )}
-                      </button>
-                    </div>
-                  ))}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Modal for comments */}
+      {showModal && activePost && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg w-full max-w-2xl">
+            <h2 className="text-xl font-bold mb-4">Comments</h2>
+            <ul>
+              {posts
+                .find((post) => post._id === activePost)
+                ?.comments.map((comment) => (
+                  <li
+                    key={comment._id}
+                    className="border-b border-gray-200 py-2"
+                  >
+                    <p>{comment.comment}</p>
+                    <button
+                      className={`${
+                        comment.isDeActivated
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      } text-white px-2 py-1 rounded mt-2`}
+                      onClick={() =>
+                        toggleCommentStatus(comment._id, comment.isDeActivated)
+                      }
+                    >
+                      {comment.isDeActivated ? <ShieldCheck /> : <ShieldOff />}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mt-4"
+              onClick={closeModal}
+            >
+              <X />
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

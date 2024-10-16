@@ -3,14 +3,14 @@
 import { DataTable } from "@/components/DataTable";
 import Title from "@/components/Title";
 import { ColumnDef } from "@tanstack/react-table";
-import {MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCookie } from "cookies-next";
 import Link from "next/link";
 import { format } from "date-fns";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 // Define the user type (adjust according to your API response)
 type Payment = {
@@ -98,13 +98,11 @@ const UserPage = () => {
     }
   };
 
-
   // Define columns for the data table
   const columns: ColumnDef<Payment>[] = [
     {
       accessorKey: "name",
       header: "Name",
-    
     },
     {
       accessorKey: "username",
@@ -125,7 +123,7 @@ const UserPage = () => {
             Email
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        )
+        );
       },
     },
     {
@@ -133,40 +131,12 @@ const UserPage = () => {
       header: "Date of Birth",
       cell: ({ getValue }) => {
         const dob = getValue();
-        return dob ? format(new Date(dob), "dd/MM/yyyy") : ""; // Format the date, or leave empty if dob is null/undefined
+        // Check if dob is a valid string or number, then format it
+        return dob && (typeof dob === "string" || typeof dob === "number")
+          ? format(new Date(dob), "dd/MM/yyyy")
+          : ""; // Format the date, or leave empty if dob is invalid
       },
     },
-    // {
-    //   accessorKey: "actions",
-    //   header: "Actions",
-    //   cell: ({ row }) => {
-    //     const { _id, isBlocked } = row.original;
-    //     return (
-    //       <div className="flex gap-2">
-    //         <Link href={`/user-post/${_id}`}>
-    //           <button className="bg-orange-500 text-white px-2 py-1 rounded">
-    //             <Eye size={15} />
-    //           </button>
-    //         </Link>
-    //         <Link href={`edit-user/${_id}`}>
-    //         <button
-    //           className="bg-blue-500 text-white px-2 py-1 rounded"
-    //         >
-    //           <UserRoundPen size={15} />
-    //         </button>
-    //         </Link>
-    //         <button
-    //           className={`${
-    //             isBlocked ? "bg-green-500" : "bg-red-500"
-    //           } text-white px-2 py-1 rounded`}
-    //           onClick={() => handleBlockToggle(_id, isBlocked)}
-    //         >
-    //           {isBlocked ? <ShieldBan size={15} /> : <ShieldCheck size={15} />}
-    //         </button>
-    //       </div>
-    //     );
-    //   },
-    // },
     {
       accessorKey: "actions",
       cell: ({ row }) => {
@@ -183,28 +153,25 @@ const UserPage = () => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Link href={`/user-post/${_id}`}>
-              <DropdownMenuItem>View User</DropdownMenuItem>
+                <DropdownMenuItem>View User</DropdownMenuItem>
               </Link>
               <Link href={`edit-user/${_id}`}>
-              <DropdownMenuItem>Edit User details</DropdownMenuItem>
+                <DropdownMenuItem>Edit User details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem
-              //   className={`${
-              //   isBlocked ? "bg-green-500 " : "bg-red-500"
-              // } text-white px-2 py-1 rounded`}
-               onClick={() => handleBlockToggle(_id, isBlocked)}
-            >
-                {isBlocked ? "BlockedUser" : "UnblockUser"}
+                onClick={() => handleBlockToggle(_id, isBlocked)}
+              >
+                {isBlocked ? "Blocked User" : "Unblock User"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )
+        );
       },
     },
   ];
 
   if (loading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   if (error) {
@@ -215,7 +182,6 @@ const UserPage = () => {
     <div className="flex flex-col gap-5 w-[85vw] pt-16 px-10">
       <Title title="User" />
       <DataTable columns={columns} data={data} />
-      
     </div>
   );
 };
