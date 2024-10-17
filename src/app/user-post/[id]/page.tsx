@@ -75,8 +75,10 @@ const UserPost: React.FC = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         setPosts(response.data.posts);
         setProfile(response.data.user);
+        console.log(response.data.user,"this is")
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
@@ -196,31 +198,48 @@ const UserPost: React.FC = () => {
       <div className="flex flex-col items-center p-2 mt-20 w-[85vw]">
         {loading && <Loading />}
         {error && <div className="text-red-500">{error}</div>}
+
+        {/* Profile Section */}
         <div className="flex flex-col items-center mb-8">
           <img
-            src={`http://103.119.171.226:4000/${profile.profileImage}`}
+            src={
+              profile.profileImage
+                ? profile?.profileImage
+                : "/user.png" // Default avatar path
+            }
             alt="Profile"
             className="w-[100px] h-[100px] object-cover rounded-full"
           />
           <h2 className="text-xl font-bold mt-4">{profile.name}</h2>
           <p className="mt-2">{profile.email}</p>
         </div>
+
         {message && <div className="text-green-500">{message}</div>}
+
+        {/* Posts Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentPosts.map((post) => (
             <div key={post._id} className="relative group">
               <CardContent className="bg-white p-4 shadow-md rounded-lg">
-                {post.image && post.image.length > 0 && (
+                {post.media && post.media.length > 0 && (
                   <Carousel className="w-full max-w-xs">
                     <CarouselContent>
-                      {post.image.map((image: string) => (
-                        <CarouselItem key={image}>
+                      {post.media.map((media) => (
+                        <CarouselItem key={media.path}>
                           <div className="p-1">
-                            <img
-                              src={`http://103.119.171.226:4000/${image}`}
-                              alt="post image"
-                              className="w-full h-[200px] object-cover rounded"
-                            />
+                            {media.type === "video" ? (
+                              <video
+                                src={media.path}
+                                controls
+                                className="w-full h-[200px] object-cover rounded"
+                              />
+                            ) : (
+                              <img
+                                src={media.path}
+                                alt="post media"
+                                className="w-full h-[200px] object-cover rounded"
+                              />
+                            )}
                           </div>
                         </CarouselItem>
                       ))}
@@ -229,6 +248,7 @@ const UserPost: React.FC = () => {
                     <CarouselNext />
                   </Carousel>
                 )}
+
                 <div className="mt-2 text-gray-800">
                   <p>
                     <strong>Caption: </strong>
@@ -239,6 +259,7 @@ const UserPost: React.FC = () => {
                     {post.likes.length}
                   </p>
                 </div>
+
                 <div className="flex justify-between mt-4">
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
@@ -291,44 +312,55 @@ const UserPost: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal for comments */}
-      {showModal && activePost && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-lg w-full max-w-2xl">
-            <h2 className="text-xl font-bold mb-4">Comments</h2>
-            <ul>
-              {posts
-                .find((post) => post._id === activePost)
-                ?.comments.map((comment) => (
-                  <li
-                    key={comment._id}
-                    className="border-b border-gray-200 py-2"
-                  >
-                    <p>{comment.comment}</p>
-                    <button
-                      className={`${
-                        comment.isDeActivated
-                          ? "bg-green-500 hover:bg-green-600"
-                          : "bg-gray-500 hover:bg-gray-600"
-                      } text-white px-2 py-1 rounded mt-2`}
-                      onClick={() =>
-                        toggleCommentStatus(comment._id, comment.isDeActivated)
-                      }
-                    >
-                      {comment.isDeActivated ? <ShieldCheck /> : <ShieldOff />}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded mt-4"
-              onClick={closeModal}
-            >
-              <X />
-            </button>
-          </div>
-        </div>
+    {/* Modal for comments */}
+{showModal && activePost && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ease-in-out"
+    onClick={closeModal} // Close modal when clicking the overlay
+  >
+    <div
+      className="bg-white p-8 rounded-lg w-full max-w-2xl transition-transform transform duration-300 ease-in-out"
+      onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
+    >
+      <h2 className="text-xl font-bold mb-4">Comments</h2>
+      {posts
+.find((post) => post._id === activePost)
+        ?.comments.length > 0 ? (
+        <ul>
+          {posts
+            .find((post) => post._id === activePost)
+            ?.comments.map((comment) => (
+              <li key={comment._id} className="border-b border-gray-200 py-2">
+                <p>{comment.comment}</p>
+                <button
+                  className={`${
+                    comment.isDeActivated
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-gray-500 hover:bg-gray-600"
+                  } text-white px-2 py-1 rounded mt-2`}
+                  onClick={() =>
+                    toggleCommentStatus(comment._id, comment.isDeActivated)
+                  }
+                >
+                  {comment.isDeActivated ? <ShieldCheck /> : <ShieldOff />}
+                </button>
+              </li>
+            ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No comments available for this post.</p>
       )}
+
+      <button
+        className="bg-red-500 text-white px-4 py-2 rounded mt-4"
+        onClick={closeModal}
+      >
+        <X />
+      </button>
+    </div>
+  </div>
+)}
+
     </>
   );
 };
