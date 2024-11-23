@@ -78,7 +78,7 @@ const UserPost: React.FC = () => {
 
         setPosts(response.data.posts);
         setProfile(response.data.user);
-        console.log(response.data.user,"this is")
+        console.log(response.data.user, "this is");
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
@@ -203,9 +203,7 @@ const UserPost: React.FC = () => {
         <div className="flex flex-col items-center mb-8">
           <img
             src={
-              profile.profileImage
-                ? profile?.profileImage
-                : "/user.png" // Default avatar path
+              profile.profileImage ? profile?.profileImage : "/user.png" // Default avatar path
             }
             alt="Profile"
             className="w-[100px] h-[100px] object-cover rounded-full"
@@ -312,55 +310,65 @@ const UserPost: React.FC = () => {
         </div>
       </div>
 
-    {/* Modal for comments */}
-{showModal && activePost && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ease-in-out"
-    onClick={closeModal} // Close modal when clicking the overlay
-  >
-    <div
-      className="bg-white p-8 rounded-lg w-full max-w-2xl transition-transform transform duration-300 ease-in-out"
-      onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
-    >
-      <h2 className="text-xl font-bold mb-4">Comments</h2>
-      {posts
-.find((post) => post._id === activePost)
-        ?.comments.length > 0 ? (
-        <ul>
-          {posts
-            .find((post) => post._id === activePost)
-            ?.comments.map((comment) => (
-              <li key={comment._id} className="border-b border-gray-200 py-2">
-                <p>{comment.comment}</p>
-                <button
-                  className={`${
-                    comment.isDeActivated
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-gray-500 hover:bg-gray-600"
-                  } text-white px-2 py-1 rounded mt-2`}
-                  onClick={() =>
-                    toggleCommentStatus(comment._id, comment.isDeActivated)
-                  }
-                >
-                  {comment.isDeActivated ? <ShieldCheck /> : <ShieldOff />}
-                </button>
-              </li>
-            ))}
-        </ul>
-      ) : (
-        <p className="text-gray-500">No comments available for this post.</p>
+      {/* Modal for comments */}
+      {showModal && activePost && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ease-in-out"
+          onClick={closeModal} // Close modal when clicking the overlay
+        >
+          <div
+            className="bg-white p-8 rounded-lg w-full max-w-2xl transition-transform transform duration-300 ease-in-out"
+            onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
+          >
+            <h2 className="text-xl font-bold mb-4">Comments</h2>
+            {posts.find((post) => post._id === activePost)?.comments.length >
+            0 ? (
+              <ul>
+                {posts
+                  .find((post) => post._id === activePost)
+                  ?.comments.map((comment) => (
+                    <li
+                      key={comment._id}
+                      className="border-b border-gray-200 py-2"
+                    >
+                      <p>{comment.comment}</p>
+                      <button
+                        className={`${
+                          comment.isDeActivated
+                            ? "bg-green-500 hover:bg-green-600"
+                            : "bg-gray-500 hover:bg-gray-600"
+                        } text-white px-2 py-1 rounded mt-2`}
+                        onClick={() =>
+                          toggleCommentStatus(
+                            comment._id,
+                            comment.isDeActivated
+                          )
+                        }
+                      >
+                        {comment.isDeActivated ? (
+                          <ShieldCheck />
+                        ) : (
+                          <ShieldOff />
+                        )}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">
+                No comments available for this post.
+              </p>
+            )}
+
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mt-4"
+              onClick={closeModal}
+            >
+              <X />
+            </button>
+          </div>
+        </div>
       )}
-
-      <button
-        className="bg-red-500 text-white px-4 py-2 rounded mt-4"
-        onClick={closeModal}
-      >
-        <X />
-      </button>
-    </div>
-  </div>
-)}
-
     </>
   );
 };

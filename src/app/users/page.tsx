@@ -46,7 +46,7 @@ const UserPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setData(response.data); // Set data from API response
+      setData(response.data.users); // Set data from API response
     } catch (err) {
       setError("Failed to fetch data");
     } finally {
