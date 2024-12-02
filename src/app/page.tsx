@@ -2,7 +2,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getCookie } from "cookies-next";
-import { BookCopy, CreditCard, DollarSign, User, LucideIcon } from "lucide-react"; // Import LucideIcon type
+import {
+  BookCopy,
+  CreditCard,
+  DollarSign,
+  User,
+  LucideIcon,
+} from "lucide-react"; // Import LucideIcon type
 import { DashBoadCard } from "@/components/DashBoadCard";
 import { NavigationBar } from "@/components/Navigation/NavigationBar";
 import Loading from "@/components/loading";
@@ -26,9 +32,12 @@ export default function Home() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://103.119.171.226:4000/admin/totalData", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://postbox.biz/api/admin/totalData",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setData(response.data); // Set data from API response
       } catch (err) {
         setError("Failed to fetch data");

@@ -70,7 +70,7 @@ const UserPost: React.FC = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://103.119.171.226:4000/admin/allPosts/${id}`,
+          `https://postbox.biz/api/admin/allPosts/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -105,12 +105,9 @@ const UserPost: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(
-        `http://103.119.171.226:4000/admin/deletePost/${postId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`https://postbox.biz/api/admin/deletePost/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const updatedPosts = posts.map((post) =>
         post._id === postId ? { ...post, isDeleted: !post.isDeleted } : post
@@ -132,7 +129,7 @@ const UserPost: React.FC = () => {
     setError(null);
     try {
       await axios.post(
-        `http://103.119.171.226:4000/admin/deActivateComment/${commentId}`,
+        `https://postbox.biz/api/admin/deActivateComment/${commentId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

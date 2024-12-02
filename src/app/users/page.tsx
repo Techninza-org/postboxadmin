@@ -40,12 +40,9 @@ const UserPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://103.119.171.226:4000/admin/users",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get("https://postbox.biz/api/admin/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setData(response.data.users); // Set data from API response
     } catch (err) {
       setError("Failed to fetch data");
@@ -73,7 +70,7 @@ const UserPage = () => {
     try {
       // Call the same API endpoint regardless of action
       const response = await axios.post(
-        `http://103.119.171.226:4000/admin/blockUser/${id}`,
+        `https://postbox.biz/api/admin/blockUser/${id}`,
         {}, // No request body required
         {
           headers: { Authorization: `Bearer ${token}` },
