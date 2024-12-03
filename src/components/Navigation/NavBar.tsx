@@ -9,6 +9,7 @@ import {
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
+import Image from "next/image";
 
 export default function NavBar() {
   const router = useRouter();

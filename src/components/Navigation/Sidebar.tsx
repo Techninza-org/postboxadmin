@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronRight,
   LayoutDashboard,
-  ShoppingCart,
   UserRound,
   Settings,
   IndianRupee,
@@ -17,6 +16,16 @@ const Sidebar = () => {
   const [isCollapsed, setCollapsed] = useState(false);
   const onlyWidth = useWindowWidth();
   const mobileWidth = onlyWidth < 768; // Mobile view condition
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true); // Indicates client-side rendering
+  }, []);
+
+  if (!hasMounted) {
+    // Render a fallback until the component mounts
+    return null;
+  }
 
   const handleToggle = () => {
     setCollapsed(!isCollapsed);
@@ -28,7 +37,6 @@ const Sidebar = () => {
         isCollapsed || mobileWidth ? "w-16" : "w-40"
       } fixed min-h-screen z-10 top-12  pt-20  flex flex-col transition-all duration-300 ease-in-out bg-[#1e2035] items-center text-white`}
     >
-      {/* Show toggle button only on desktop/tablet screens */}
       {!mobileWidth && (
         <div
           className={`absolute -right-3 top-7 transform ${
@@ -46,7 +54,7 @@ const Sidebar = () => {
       )}
 
       <Nav
-        isCollapsed={mobileWidth ? true : isCollapsed} // Collapse on mobile
+        isCollapsed={mobileWidth ? true : isCollapsed}
         links={[
           {
             title: "Dashboard",
@@ -60,24 +68,24 @@ const Sidebar = () => {
             icon: UserRound,
             variant: "ghost",
           },
-          {
-            title: "Transactions",
-            href: "/transections",
-            icon: IndianRupee ,
-            variant: "ghost",
-          },
+          // {
+          //   title: "Transactions",
+          //   href: "/transections",
+          //   icon: IndianRupee,
+          //   variant: "ghost",
+          // },
           {
             title: "Log Files",
             href: "/logfile",
             icon: FileClock,
             variant: "ghost",
           },
-          {
-            title: "Settings",
-            href: "/settings",
-            icon: Settings,
-            variant: "ghost",
-          },
+          // {
+          //   title: "Settings",
+          //   href: "/settings",
+          //   icon: Settings,
+          //   variant: "ghost",
+          // },
         ]}
       />
     </div>
