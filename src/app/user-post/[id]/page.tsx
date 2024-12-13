@@ -168,13 +168,13 @@ const UserPost: React.FC = () => {
       const updatedPosts = posts.map((post) =>
         post.comments.some((c) => c._id === commentId)
           ? {
-              ...post,
-              comments: post.comments.map((comment) =>
-                comment._id === commentId
-                  ? { ...comment, isDeActivated: !comment.isDeActivated }
-                  : comment
-              ),
-            }
+            ...post,
+            comments: post.comments.map((comment) =>
+              comment._id === commentId
+                ? { ...comment, isDeActivated: !comment.isDeActivated }
+                : comment
+            ),
+          }
           : post
       );
 
@@ -245,12 +245,12 @@ const UserPost: React.FC = () => {
               Business Pages
             </h2>
           </Link>
-          <Link href={`/business/${id}`}>
-            <div className="w-full mt-2">
-              {businessPages.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <div className="flex space-x-8 mx-4">
-                    {businessPages.slice(0, 4).map((businessPage) => (
+          <div className="w-full mt-2">
+            {businessPages.length > 0 ? (
+              <div className="overflow-x-auto">
+                <div className="flex space-x-8 mx-4">
+                  {businessPages.slice(0, 4).map((businessPage: any) => (
+                    <Link key={businessPage._id} href={`/business/${businessPage._id}`}>
                       <div
                         key={businessPage._id}
                         className=" p-2 rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
@@ -297,14 +297,15 @@ const UserPost: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </Link>
+
+                  ))}
                 </div>
-              ) : (
-                <p>No business pages available.</p>
-              )}
-            </div>
-          </Link>
+              </div>
+            ) : (
+              <p>No business pages available.</p>
+            )}
+          </div>
         </div>
 
         {message && <div className="text-green-500">{message}</div>}
@@ -366,11 +367,10 @@ const UserPost: React.FC = () => {
                     {post.comments.length})
                   </button>
                   <button
-                    className={`${
-                      post.isDeleted
+                    className={`${post.isDeleted
                         ? "bg-gray-500 hover:bg-gray-600"
                         : "bg-red-500 hover:bg-red-600"
-                    } text-white px-2 py-1 rounded`}
+                      } text-white px-2 py-1 rounded`}
                     onClick={() => confirmDeletePost(post._id, post.isDeleted)}
                   >
                     {post.isDeleted ? <Undo /> : <Trash />}
@@ -384,9 +384,8 @@ const UserPost: React.FC = () => {
         {/* Pagination Controls */}
         <div className="flex justify-between w-full max-w-xs mt-8">
           <button
-            className={`px-4 py-2 rounded ${
-              currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-            }`}
+            className={`px-4 py-2 rounded ${currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+              }`}
             disabled={currentPage === 1}
             onClick={handlePrevPage}
           >
@@ -396,11 +395,10 @@ const UserPost: React.FC = () => {
             Page {currentPage} of {totalPages}
           </p>
           <button
-            className={`px-4 py-2 rounded ${
-              currentPage === totalPages
+            className={`px-4 py-2 rounded ${currentPage === totalPages
                 ? "bg-gray-300"
                 : "bg-blue-500 text-white"
-            }`}
+              }`}
             disabled={currentPage === totalPages}
             onClick={handleNextPage}
           >
@@ -422,7 +420,7 @@ const UserPost: React.FC = () => {
             <h2 className="text-xl font-bold mb-4">Comments</h2>
             {/* @ts-ignore */}
             {posts?.find((post) => post._id === activePost)?.comments.length >
-            0 ? (
+              0 ? (
               <ul>
                 {posts
                   .find((post) => post._id === activePost)
@@ -433,11 +431,10 @@ const UserPost: React.FC = () => {
                     >
                       <p>{comment.comment}</p>
                       <button
-                        className={`${
-                          comment.isDeActivated
+                        className={`${comment.isDeActivated
                             ? "bg-green-500 hover:bg-green-600"
                             : "bg-gray-500 hover:bg-gray-600"
-                        } text-white px-2 py-1 rounded mt-2`}
+                          } text-white px-2 py-1 rounded mt-2`}
                         onClick={() =>
                           toggleCommentStatus(
                             comment._id,

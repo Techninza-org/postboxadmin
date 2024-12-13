@@ -4,7 +4,9 @@ import { DataTable } from '@/components/DataTable';
 import Title from '@/components/Title';
 import { cn } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
-import React from 'react';
+import axios from 'axios';
+import { getCookie } from 'cookies-next';
+import React, { useEffect, useState } from 'react';
 
 // Define the Payment type
 type Payment = {
@@ -37,44 +39,83 @@ const data: Payment[] = [
   { name: "RMGTPRMG856", status: getRandomStatus(), date: "12-11-2024", amount: "credit" },
 ];
 
+
+
 // Define the columns for the table
 const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    
+    accessorKey: "_id",
+    header: "Transaction Id",
   },
   {
-    accessorKey: "status",
+    header: "Razor Transaction Id",
+    accessorKey: "razorpayOrderId",
+  },
+  {
     header: "Status",
+    accessorKey: "paymentStatus",
     cell: ({ row }) => {
+
+      let status = '';
+      switch (Number(row.getValue('paymentStatus'))) {
+        case 0:
+          status = "pending"
+          break;
+        case 1:
+          status = "success"
+          break;
+        case 2:
+          status = "failed"
+          break;
+      }
       return (
-        <div className={cn("font-medium text-xs text-white w-20 text-center py-1 px-2 rounded-lg", {
-          "bg-red-800": row.getValue('status') === "failed",
-          "bg-orange-800": row.getValue('status') === "pending",
-          "bg-yellow-800": row.getValue('status') === "processing",
-          "bg-green-800": row.getValue('status') === "success"
+        <div className={cn("font-medium text-xs text-white w-20 text-center py-1 px-2 rounded-lg capitalize", {
+          "bg-red-800": row.getValue('paymentStatus') === 0, //failed
+          "bg-orange-800": row.getValue('paymentStatus') === 2, //pending
+          "bg-green-800": row.getValue('paymentStatus') === 1, //success
         })}>
-          {row.getValue('status')}
+          {status}
         </div>
       );
     }
   },
   {
-    accessorKey: "date",
-    header: "Date",
+    header: "date",
+    accessorKey: "createdAt",
   },
   {
-    accessorKey: "amount",
+    accessorKey: "totalAmount",
     header: "Amount",
   },
 ];
 
 // Create the OrderPage component
 const OrderPage: React.FC = () => {
+
+  const [data, setData] = useState<any>()
+  const token = getCookie("authtoken");
+
+  const fetchTxnData = async () => {
+    try {
+      const res = (await axios.get('https://postbox.biz/api/admin/allOrders', {
+        headers: { Authorization: `Bearer ${token}` },
+      })).data
+      setData(res.orders)
+    } catch (error) {
+      console.log(error, "Error [fetchTxnData]")
+    }
+  }
+
+  useEffect(() => {
+    fetchTxnData()
+  }, [token])
+
+
   return (
     <div className='flex flex-col gap-5 w-[85vw] pt-16 px-10'>
       <Title title="Orders" />
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data || []} />
     </div>
   );
 };

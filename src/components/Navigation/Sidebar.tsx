@@ -7,6 +7,7 @@ import {
   Settings,
   IndianRupee,
   FileClock,
+  Zap,
 } from "lucide-react";
 import { Nav } from "../ui/nav";
 import { Button } from "../ui/button";
@@ -78,6 +79,12 @@ const Sidebar = () => {
             title: "Log Files",
             href: "/logfile",
             icon: FileClock,
+            variant: "ghost",
+          },
+          {
+            title: "Boosted Posts",
+            href: "/booster-post",
+            icon: Zap,
             variant: "ghost",
           },
           // {

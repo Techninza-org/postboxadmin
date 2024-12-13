@@ -26,7 +26,7 @@ import React from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  
+
   data: TData[];
 }
 
@@ -38,6 +38,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [filtering, setFiltering] = React.useState<string>("")
 
 
   const table = useReactTable({
@@ -52,21 +53,20 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
       sorting,
+      globalFilter: filtering
     },
-    
+    onGlobalFilterChange: setFiltering
   });
 
   return (
     <div>
       <div className="flex items-center py-2">
-        {/* <Input
-          placeholder="Filter name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+        <Input
+          placeholder="Search..."
+          value={filtering}
+          onChange={(e) => setFiltering(e.target.value)}
           className="max-w-sm"
-        /> */}
+        />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -79,9 +79,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

@@ -131,7 +131,7 @@ const UserPage = () => {
       },
     },
     {
-      accessorKey: "actions",
+      accessorKey: "Actions",
       cell: ({ row }) => {
         const { _id, isBlocked } = row.original;
 
@@ -144,13 +144,11 @@ const UserPage = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
               <Link href={`/user-post/${_id}`}>
                 <DropdownMenuItem>View User</DropdownMenuItem>
               </Link>
               <Link href={`edit-user/${_id}`}>
-                <DropdownMenuItem>Edit User details</DropdownMenuItem>
+                <DropdownMenuItem>View User Details</DropdownMenuItem>
               </Link>
               <DropdownMenuItem
                 onClick={() => handleBlockToggle(_id, isBlocked)}
