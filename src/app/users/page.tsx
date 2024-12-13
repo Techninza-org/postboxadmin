@@ -56,40 +56,37 @@ const UserPage = () => {
   }, []);
 
   // Handle block/unblock user using the same API
-  const handleBlockToggle = async (id: string, isBlocked: boolean) => {
-    const action = isBlocked ? "unblock" : "block"; // Determine action based on current state
+  // Handle block/unblock user with proper toggling
+  const handleBlockToggle = async (id: string, currentStatus: boolean) => {
+    const action = currentStatus ? "unblock" : "block";
     const isConfirmed = window.confirm(
       `Are you sure you want to ${action} this user?`
     );
-    if (!isConfirmed) {
-      return; // Exit the function if user cancels the action
-    }
+
+    if (!isConfirmed) return;
 
     setLoading(true);
 
     try {
-      // Call the same API endpoint regardless of action
-      const response = await axios.post(
+      // Call the API endpoint to toggle the block/unblock status
+      await axios.post(
         `https://postbox.biz/api/admin/blockUser/${id}`,
-        {}, // No request body required
+        {}, // No request body needed
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // Update the specific user's isBlocked status in the state after successful response
-      const updatedUser = response.data; // Assume response contains the updated user object with isBlocked
+      // Update the user's `isBlocked` status in the local state
       setData((prevData) =>
         prevData.map((user) =>
-          user._id === id ? { ...user, isBlocked: updatedUser.isBlocked } : user
+          user._id === id ? { ...user, isBlocked: !currentStatus } : user
         )
       );
 
-      alert(
-        `User successfully ${updatedUser.isBlocked ? "blocked" : "unblocked"}`
-      );
+      alert(`User successfully ${action}ed.`);
     } catch (err) {
-      setError(`Failed to ${action} user`);
+      setError(`Failed to ${action} user. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -124,20 +121,20 @@ const UserPage = () => {
       },
     },
     {
-      accessorKey: "dob", // The key for the data from the API
+      accessorKey: "dob",
       header: "Date of Birth",
       cell: ({ getValue }) => {
         const dob = getValue();
-        // Check if dob is a valid string or number, then format it
         return dob && (typeof dob === "string" || typeof dob === "number")
           ? format(new Date(dob), "dd/MM/yyyy")
-          : ""; // Format the date, or leave empty if dob is invalid
+          : ""; // Format the date
       },
     },
     {
       accessorKey: "actions",
       cell: ({ row }) => {
         const { _id, isBlocked } = row.original;
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -158,7 +155,7 @@ const UserPage = () => {
               <DropdownMenuItem
                 onClick={() => handleBlockToggle(_id, isBlocked)}
               >
-                {isBlocked ? "Blocked User" : "Unblock User"}
+                {isBlocked ? "Unblock User" : "Block User"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

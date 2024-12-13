@@ -1,4 +1,5 @@
 "use client";
+
 import { CardContent } from "@/components/DashBoadCard"; // Ensure this path is correct
 import {
   ChevronLeft,
@@ -12,6 +13,8 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import axios from "axios";
 import {
@@ -44,6 +47,12 @@ interface Profile {
   email: string;
   profileImage: string;
 }
+interface BusinessPage {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+}
 
 const UserPost: React.FC = () => {
   const [activePost, setActivePost] = useState<string | null>(null);
@@ -57,7 +66,7 @@ const UserPost: React.FC = () => {
     email: "",
     profileImage: "",
   });
-
+  const [businessPages, setBusinessPages] = useState<BusinessPage[]>([]);
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 6;
@@ -86,7 +95,27 @@ const UserPost: React.FC = () => {
       }
     };
 
+    const fetchBusinessPages = async () => {
+      setLoading(true);
+      try {
+        // Fetch business page data
+        const response = await axios.get(
+          `https://postbox.biz/api/admin/businessPages/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setBusinessPages(response.data.businessPages);
+      } catch (err) {
+        setError("Failed to fetch business pages");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPost();
+    fetchBusinessPages();
   }, [id, token]);
 
   // Handle post deletion
@@ -207,11 +236,82 @@ const UserPost: React.FC = () => {
           />
           <h2 className="text-xl font-bold mt-4">{profile.name}</h2>
           <p className="mt-2">{profile.email}</p>
+          <hr className="w-full border-t border-gray-400 my-6" />
+
+          {/* Business Pages Section */}
+
+          <Link href="/about">
+            <h2 className="text-lg font-bold items-center mb-2">
+              Business Pages
+            </h2>
+          </Link>
+          <Link href={`/business/${id}`}>
+            <div className="w-full mt-2">
+              {businessPages.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <div className="flex space-x-8 mx-4">
+                    {businessPages.slice(0, 4).map((businessPage) => (
+                      <div
+                        key={businessPage._id}
+                        className=" p-2 rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
+                      >
+                        <img
+                          src={businessPage.pageProfileImage}
+                          alt={businessPage.businessName}
+                          className="w-[50px] h-[50px] rounded-lg object-cover mb-4"
+                        />
+                        <h3 className="text-lg font-bold">
+                          {businessPage.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm text-center">
+                          {businessPage.description}
+                        </p>
+                        <div className="mt-2 text-gray-800">
+                          <p>
+                            <strong>businessName: </strong>
+                            {businessPage.businessName}
+                          </p>
+                          <p>
+                            <strong>service: </strong>
+                            {businessPage.service}
+                          </p>
+                          <p>
+                            <strong>businessUsername: </strong>
+                            {businessPage.businessUsername}
+                          </p>
+                          <p>
+                            <strong>websiteUrl: </strong>
+                            {businessPage.websiteUrl}
+                          </p>
+                          <p>
+                            <strong>bio: </strong>
+                            {businessPage.bio}
+                          </p>
+                          <p>
+                            <strong>email: </strong>
+                            {businessPage.email}
+                          </p>
+                          <p>
+                            <strong>mobile: </strong>
+                            {businessPage.mobile}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p>No business pages available.</p>
+              )}
+            </div>
+          </Link>
         </div>
 
         {message && <div className="text-green-500">{message}</div>}
+        <hr className="w-full border-t border-gray-400 my-6" />
 
         {/* Posts Section */}
+        <h2 className="text-2xl font-bold items-center mb-6">Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentPosts.map((post) => (
             <div key={post._id} className="relative group">

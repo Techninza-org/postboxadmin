@@ -68,12 +68,12 @@ const Sidebar = () => {
             icon: UserRound,
             variant: "ghost",
           },
-          // {
-          //   title: "Transactions",
-          //   href: "/transections",
-          //   icon: IndianRupee,
-          //   variant: "ghost",
-          // },
+          {
+            title: "Transactions",
+            href: "/transections",
+            icon: IndianRupee,
+            variant: "ghost",
+          },
           {
             title: "Log Files",
             href: "/logfile",
