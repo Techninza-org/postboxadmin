@@ -124,12 +124,10 @@ const EditUser = () => {
     <div className="grid place-content-center w-[85vw] h-screen p-2">
       <CardContent className="w-full max-w-2xl mx-auto">
         <div className="flex items-center space-x-4 mb-6">
-          <Image
+          <img
             src={formData.profileImage}
             alt="Profile"
-            width={96}
-            height={96}
-            className="rounded-full"
+            className="w-[100px] h-[100px] object-cover rounded-full"
           />
           <div>
             <h1 className="font-bold text-2xl">{formData.name}</h1>
