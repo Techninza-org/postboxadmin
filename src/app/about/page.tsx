@@ -262,7 +262,7 @@ const UserPost: React.FC = () => {
                     {businessPages.slice(0, 4).map((businessPage) => (
                       <div
                         key={businessPage._id}
-                        className=" p-2 rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
+                        className="rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
                       >
                         <img
                           src={businessPage.pageProfileImage}
