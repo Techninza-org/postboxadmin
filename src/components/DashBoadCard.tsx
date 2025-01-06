@@ -14,7 +14,7 @@ export const DashBoadCard = (props:CardProps) => {
     <CardContent>
       <section className='flex justify-between gap-2'>
         <p className='text-sm'>{props.label}</p>
-        <props.icons className='h-4 w-4 text-gray-400'/admin/>
+        <props.icons className='h-4 w-4 text-gray-400'/>
       </section>
       <section className='flex flex-col gap-1'>
         <h3 className='text-2xl font-semibold'>{props.amount}</h3>
