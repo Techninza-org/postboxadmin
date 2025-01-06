@@ -60,37 +60,37 @@ const Sidebar = () => {
         links={[
           {
             title: "Dashboard",
-            href: "/",
+            href: "/admin/",
             icon: LayoutDashboard,
             variant: "default",
           },
           {
             title: "Users",
-            href: "/users",
+            href: "/admin/users",
             icon: UserRound,
             variant: "ghost",
           },
           {
             title: "Transactions",
-            href: "/transections",
+            href: "/admin/transections",
             icon: IndianRupee,
             variant: "ghost",
           },
           {
             title: "Log Files",
-            href: "/logfile",
+            href: "/admin/logfile",
             icon: FileClock,
             variant: "ghost",
           },
           {
             title: "Boosted Posts",
-            href: "/boosted-post",
+            href: "/admin/boosted-post",
             icon: Zap,
             variant: "ghost",
           },
           {
             title: "Custom Inputs",
-            href: "/custom",
+            href: "/admin/custom",
             icon: Pen,
             variant: "ghost",
           },

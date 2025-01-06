@@ -20,7 +20,7 @@ export default function NavBar() {
   const handleLogOut = () => {
     deleteCookie("authtoken");
 
-    router.push("/login");
+    router.push("/admin/login");
     // console.log('Logged Out');
   };
   return (
@@ -29,7 +29,7 @@ export default function NavBar() {
         <div className="relative flex h-14 items-center justify-between">
           <div className="flex flex-1 items-center justify-start">
             <div className="flex flex-shrink-0 items-center">
-              <img alt="Your Company" src="/logo.png" className="h-8 w-auto" />
+              <img alt="Your Company" src="/admin/logo.png" className="h-8 w-auto" />
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">

@@ -56,11 +56,13 @@ interface BusinessPage {
 
 const UserPost: React.FC = () => {
   const [activePost, setActivePost] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [currPost, setCurrPost] = useState<any>()
+
   const [profile, setProfile] = useState<Profile>({
     name: "",
     email: "",
@@ -79,15 +81,13 @@ const UserPost: React.FC = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://postbox.biz/api/admin/allPosts/${id}`,
+          `https://postbox.biz/api/admin/allBoostedPosts?page=${currentPage}&limit=${postsPerPage}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
 
-        setPosts(response.data.posts);
-        setProfile(response.data.user);
-        console.log(response.data.user, "this is");
+        setPosts(response.data.boostedPosts);
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
@@ -95,27 +95,7 @@ const UserPost: React.FC = () => {
       }
     };
 
-    const fetchBusinessPages = async () => {
-      setLoading(true);
-      try {
-        // Fetch business page data
-        const response = await axios.get(
-          `https://postbox.biz/api/admin/businessPages/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setBusinessPages(response.data.businessPages);
-      } catch (err) {
-        setError("Failed to fetch business pages");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPost();
-    fetchBusinessPages();
   }, [id, token]);
 
   // Handle post deletion
@@ -166,10 +146,10 @@ const UserPost: React.FC = () => {
       );
 
       const updatedPosts = posts.map((post) =>
-        post.comments.some((c) => c._id === commentId)
+        post.comments.some((c: any) => c._id === commentId)
           ? {
             ...post,
-            comments: post.comments.map((comment) =>
+            comments: post.comments.map((comment: any) =>
               comment._id === commentId
                 ? { ...comment, isDeActivated: !comment.isDeActivated }
                 : comment
@@ -193,19 +173,20 @@ const UserPost: React.FC = () => {
 
   const toggleComments = (postId: string) => {
     setActivePost(postId);
-    setShowModal(true);
+    setShowModal(1);
   };
 
   const closeModal = () => {
-    setShowModal(false);
+    setShowModal(0);
     setActivePost(null);
+    setCurrPost(null);
   };
 
   // Pagination logic
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(posts.length / postsPerPage);
+  const currentPosts = posts?.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(posts?.length / postsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -219,103 +200,23 @@ const UserPost: React.FC = () => {
     }
   };
 
+  const showPostDetails = (post: any) => {
+    setShowModal(2)
+    setCurrPost(post)
+  }
+
   return (
     <>
       <div className="flex flex-col items-center p-2 mt-20 w-[85vw]">
         {loading && <Loading />}
         {error && <div className="text-red-500">{error}</div>}
 
-        {/* Profile Section */}
-        <div className="flex flex-col items-center mb-8">
-          <img
-            src={
-              profile.profileImage ? profile?.profileImage : "/user.png" // Default avatar path
-            }
-            alt="Profile"
-            className="w-[100px] h-[100px] object-cover rounded-full"
-          />
-          <h2 className="text-xl font-bold mt-4">{profile.name}</h2>
-          <p className="mt-2">{profile.email}</p>
-          <hr className="w-full border-t border-gray-400 my-6" />
-
-          {/* Business Pages Section */}
-
-          <Link href="/about">
-            <h2 className="text-lg font-bold items-center mb-2">
-              Business Pages
-            </h2>
-          </Link>
-          <div className="w-full mt-2">
-            {businessPages.length > 0 ? (
-              <div className="overflow-x-auto">
-                <div className="flex space-x-8 mx-4">
-                  {businessPages.slice(0, 4).map((businessPage: any) => (
-                    <Link key={businessPage._id} href={`/business/${businessPage._id}`}>
-                      <div
-                        key={businessPage._id}
-                        className=" p-2 rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
-                      >
-                        <img
-                          src={businessPage.pageProfileImage}
-                          alt={businessPage.businessName}
-                          className="w-[50px] h-[50px] rounded-lg object-cover mb-4"
-                        />
-                        <h3 className="text-lg font-bold">
-                          {businessPage.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm text-center">
-                          {businessPage.description}
-                        </p>
-                        <div className="mt-2 text-gray-800">
-                          <p>
-                            <strong>businessName: </strong>
-                            {businessPage.businessName}
-                          </p>
-                          <p>
-                            <strong>service: </strong>
-                            {businessPage.service}
-                          </p>
-                          <p>
-                            <strong>businessUsername: </strong>
-                            {businessPage.businessUsername}
-                          </p>
-                          <p>
-                            <strong>websiteUrl: </strong>
-                            {businessPage.websiteUrl}
-                          </p>
-                          <p>
-                            <strong>bio: </strong>
-                            {businessPage.bio}
-                          </p>
-                          <p>
-                            <strong>email: </strong>
-                            {businessPage.email}
-                          </p>
-                          <p>
-                            <strong>mobile: </strong>
-                            {businessPage.mobile}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p>No business pages available.</p>
-            )}
-          </div>
-        </div>
-
-        {message && <div className="text-green-500">{message}</div>}
-        <hr className="w-full border-t border-gray-400 my-6" />
-
         {/* Posts Section */}
         <h2 className="text-2xl font-bold items-center mb-6">Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentPosts.map((post) => (
-            <div key={post._id} className="relative group">
+            <div key={post._id} className="relative group" onClick={() => showPostDetails(post)}>
+              {post.isLive && <div className="text-xs px-2 text-white p-1 rounded-full bg-red-600 animate-pulse absolute -top-2 -right-2">Live</div>}
               <CardContent className="bg-white p-4 shadow-md rounded-lg">
                 {/* @ts-ignore */}
                 {post.media && post.media.length > 0 && (
@@ -368,8 +269,8 @@ const UserPost: React.FC = () => {
                   </button>
                   <button
                     className={`${post.isDeleted
-                        ? "bg-gray-500 hover:bg-gray-600"
-                        : "bg-red-500 hover:bg-red-600"
+                      ? "bg-gray-500 hover:bg-gray-600"
+                      : "bg-red-500 hover:bg-red-600"
                       } text-white px-2 py-1 rounded`}
                     onClick={() => confirmDeletePost(post._id, post.isDeleted)}
                   >
@@ -396,8 +297,8 @@ const UserPost: React.FC = () => {
           </p>
           <button
             className={`px-4 py-2 rounded ${currentPage === totalPages
-                ? "bg-gray-300"
-                : "bg-blue-500 text-white"
+              ? "bg-gray-300"
+              : "bg-blue-500 text-white"
               }`}
             disabled={currentPage === totalPages}
             onClick={handleNextPage}
@@ -408,7 +309,7 @@ const UserPost: React.FC = () => {
       </div>
 
       {/* Modal for comments */}
-      {showModal && activePost && (
+      {showModal === 1 && activePost && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ease-in-out"
           onClick={closeModal} // Close modal when clicking the overlay
@@ -419,12 +320,11 @@ const UserPost: React.FC = () => {
           >
             <h2 className="text-xl font-bold mb-4">Comments</h2>
             {/* @ts-ignore */}
-            {posts?.find((post) => post._id === activePost)?.comments.length >
-              0 ? (
+            {posts?.find((post) => post._id === activePost)?.comments.length ? (
               <ul>
                 {posts
                   .find((post) => post._id === activePost)
-                  ?.comments.map((comment) => (
+                  ?.comments.map((comment: any) => (
                     <li
                       key={comment._id}
                       className="border-b border-gray-200 py-2"
@@ -432,8 +332,8 @@ const UserPost: React.FC = () => {
                       <p>{comment.comment}</p>
                       <button
                         className={`${comment.isDeActivated
-                            ? "bg-green-500 hover:bg-green-600"
-                            : "bg-gray-500 hover:bg-gray-600"
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-gray-500 hover:bg-gray-600"
                           } text-white px-2 py-1 rounded mt-2`}
                         onClick={() =>
                           toggleCommentStatus(
@@ -462,6 +362,58 @@ const UserPost: React.FC = () => {
               onClick={closeModal}
             >
               <X />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showModal === 2 && Object.keys(currPost || {}).length && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-full max-w-2xl transition-transform transform duration-300 ease-in-out">
+            <h2 className="text-2xl font-bold mb-4">Post Details</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center space-x-4">
+                <img
+                  src={currPost.userId?.profileImage || '/admin/placeholder.svg?height=50&width=50'}
+                  alt={currPost.userId?.name || 'User'}
+                  className="w-12 h-12 rounded-full"
+                />
+                <span className="font-semibold">{currPost.userId?.name || 'Unknown User'}</span>
+              </div>
+
+              <div>
+                <p className="font-semibold">Boost Radius:</p>
+                <p>{currPost.boostedPost?.radius || 'N/A'} KM</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Boost Start Date:</p>
+                <p>{currPost.boostedPost?.startDate ? new Date(currPost.boostedPost.startDate).toLocaleDateString() : 'N/A'}</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Boost End Date:</p>
+                <p>{currPost.boostedPost?.endDate ? new Date(currPost.boostedPost.endDate).toLocaleDateString() : 'N/A'}</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Order ID:</p>
+                <p>{currPost.boostedPost.orderId?._id || 'N/A'}</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">Total Amount:</p>
+                <p>{currPost.boostedPost.orderId?.totalAmount ? `${currPost.boostedPost.orderId.totalAmount.toFixed(2)} ${currPost.boostedPost.orderId.currency || ''}` : 'N/A'}</p>
+              </div>
+            </div>
+
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mt-6 flex items-center justify-center"
+              onClick={closeModal}
+            >
+              <X className="mr-2" />
+              Close
             </button>
           </div>
         </div>

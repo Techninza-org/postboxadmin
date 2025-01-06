@@ -52,15 +52,6 @@ interface BusinessPage {
   title: string;
   description: string;
   image: string;
-  pageProfileImage: string;
-  businessName: string;
-  service: string;
-  businessUsername: string;
-  websiteUrl: string;
-  bio: string;
-  email: string;
-  mobile: string;
-
 }
 
 const UserPost: React.FC = () => {
@@ -238,7 +229,7 @@ const UserPost: React.FC = () => {
         <div className="flex flex-col items-center mb-8">
           <img
             src={
-              profile.profileImage ? profile?.profileImage : "/user.png" // Default avatar path
+              profile.profileImage ? profile?.profileImage : "/admin/user.png" // Default avatar path
             }
             alt="Profile"
             className="w-[100px] h-[100px] object-cover rounded-full"
@@ -249,20 +240,20 @@ const UserPost: React.FC = () => {
 
           {/* Business Pages Section */}
 
-          <Link href="/page">
+          <Link href="/admin/about">
             <h2 className="text-lg font-bold items-center mb-2">
               Business Pages
             </h2>
           </Link>
-          <Link href={`/business/${id}`}>
-            <div className="w-full mt-2">
-              {businessPages.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <div className="flex space-x-8 mx-4">
-                    {businessPages.slice(0, 4).map((businessPage) => (
+          <div className="w-full mt-2">
+            {businessPages.length > 0 ? (
+              <div className="overflow-x-auto">
+                <div className="flex space-x-8 mx-4">
+                  {businessPages.slice(0, 4).map((businessPage: any) => (
+                    <Link key={businessPage._id} href={`/business/${businessPage._id}`}>
                       <div
                         key={businessPage._id}
-                        className="rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
+                        className=" p-2 rounded-lg shadow-md flex flex-col items-center h-[120px] border p-4 overflow-auto mx-6"
                       >
                         <img
                           src={businessPage.pageProfileImage}
@@ -306,14 +297,15 @@ const UserPost: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </Link>
+
+                  ))}
                 </div>
-              ) : (
-                <p>No business pages available.</p>
-              )}
-            </div>
-          </Link>
+              </div>
+            ) : (
+              <p>No business pages available.</p>
+            )}
+          </div>
         </div>
 
         {message && <div className="text-green-500">{message}</div>}
