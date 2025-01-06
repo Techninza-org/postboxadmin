@@ -33,7 +33,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       const expiresDate = new Date();
       expiresDate.setDate(expiresDate.getDate() + 1);
       setCookie("authtoken", token, { expires: expiresDate });
-      router.push("/admin/");
+      router.push("/");
     } catch (err: any) {
       setError("Email or Password is Wrong!");
 

@@ -375,7 +375,7 @@ const UserPost: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center space-x-4">
                 <img
-                  src={currPost.userId?.profileImage || '/admin/placeholder.svg?height=50&width=50'}
+                  src={currPost.userId?.profileImage || '/placeholder.svg?height=50&width=50'}
                   alt={currPost.userId?.name || 'User'}
                   className="w-12 h-12 rounded-full"
                 />

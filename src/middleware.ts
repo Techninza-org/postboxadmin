@@ -5,24 +5,24 @@ import type { NextRequest } from 'next/server'
 
 const Middleware = (req:NextRequest) => {
   const authToken = req.cookies.get("authtoken")?.value;
-  const loggedInUserNotAccessPaths= req.nextUrl.pathname==="/admin/login";
+  const loggedInUserNotAccessPaths= req.nextUrl.pathname==="/login";
 
   if (loggedInUserNotAccessPaths){
     if(authToken){
-      return NextResponse.redirect(new URL('/admin/', req.url))
+      return NextResponse.redirect(new URL('/', req.url))
     }
     
 
   }else{
     if(!authToken){
-      return NextResponse.redirect(new URL('/admin/login', req.url))
+      return NextResponse.redirect(new URL('/login', req.url))
     }
   }
 
  
 } 
 export const config = {
-  matcher: ['/admin/users', '/admin/', '/admin/login', '/admin/transections', '/admin/settings',"/admin/user-post"]
+  matcher: ['/((?!api|_next/static|_next/image|\\.png$).*)', '/users', '/', '/login', '/transections', '/settings',"/user-post"]
 }
 
 export default Middleware

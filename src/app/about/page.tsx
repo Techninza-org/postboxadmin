@@ -238,7 +238,7 @@ const UserPost: React.FC = () => {
         <div className="flex flex-col items-center mb-8">
           <img
             src={
-              profile.profileImage ? profile?.profileImage : "/admin/user.png" // Default avatar path
+              profile.profileImage ? profile?.profileImage : "/user.png" // Default avatar path
             }
             alt="Profile"
             className="w-[100px] h-[100px] object-cover rounded-full"
@@ -249,7 +249,7 @@ const UserPost: React.FC = () => {
 
           {/* Business Pages Section */}
 
-          <Link href="/admin/page">
+          <Link href="/page">
             <h2 className="text-lg font-bold items-center mb-2">
               Business Pages
             </h2>
