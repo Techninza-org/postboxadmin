@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const CustomPage = () => {
     const [price, setPrice] = useState(0);
     const [limit, setLimit] = useState(0);
     const [loading, setLoading] = useState<boolean>(false);
@@ -63,4 +63,4 @@ const page = () => {
     )
 }
 
-export default page
+export default CustomPage
