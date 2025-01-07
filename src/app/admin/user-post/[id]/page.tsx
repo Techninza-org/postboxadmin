@@ -240,7 +240,7 @@ const UserPost: React.FC = () => {
 
           {/* Business Pages Section */}
 
-          <Link href="/about">
+          <Link href="/admin/about">
             <h2 className="text-lg font-bold items-center mb-2">
               Business Pages
             </h2>
