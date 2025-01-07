@@ -9,7 +9,7 @@ const Middleware = (req:NextRequest) => {
 
   if (loggedInUserNotAccessPaths){
     if(authToken){
-      return NextResponse.redirect(new URL('/admin', req.url))
+      return NextResponse.redirect(new URL('/admin/login', req.url))
     }
     
 
