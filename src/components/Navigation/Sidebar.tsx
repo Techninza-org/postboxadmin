@@ -60,7 +60,7 @@ const Sidebar = () => {
         links={[
           {
             title: "Dashboard",
-            href: "/admin/",
+            href: "/admin/dashboard",
             icon: LayoutDashboard,
             variant: "default",
           },

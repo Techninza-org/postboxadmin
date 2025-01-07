@@ -20,7 +20,7 @@ export default function NavBar() {
   const handleLogOut = () => {
     deleteCookie("authtoken");
 
-    router.push("/admin/login");
+    router.push("/login");
     // console.log('Logged Out');
   };
   return (
