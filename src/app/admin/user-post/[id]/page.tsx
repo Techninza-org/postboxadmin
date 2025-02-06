@@ -325,7 +325,7 @@ const UserPost: React.FC = () => {
                       {post.media.map((media) => (
                         <CarouselItem key={media.path}>
                           <div className="p-1">
-                            {media.type === "video" ? (
+                            {media.type === "video/mp4" ? (
                               <video
                                 src={media.path}
                                 controls
