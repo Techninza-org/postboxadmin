@@ -144,7 +144,7 @@ const UserPage = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <Link href={`/user-post/${_id}`}>
+              <Link href={`/admin/user-post/${_id}`}>
                 <DropdownMenuItem>View User</DropdownMenuItem>
               </Link>
               <Link href={`edit-user/${_id}`}>

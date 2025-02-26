@@ -17,7 +17,7 @@ export default function FollowerCard({ name, username, profileImage, label = 'Fo
   const router = useRouter()
 
   return (
-    <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200" onClick={() => router.push(`/user-post/${_id}`)}>
+    <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200" onClick={() => router.push(`/admin/user-post/${_id}`)}>
       <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200 " >
         {profileImage ? (
           <Image

@@ -137,7 +137,7 @@ const EditUser = () => {
 
         <div className="grid grid-cols-4 gap-4 mb-6 text-center">
           <div className="hover:bg-gray-50 ">
-            <Link href={`/user-post/${userid}`}>
+            <Link href={`/admin/user-post/${userid}`}>
               <p className="font-semibold">{formData.posts?.length}</p>
               <p className="text-sm text-gray-600">Posts</p>
             </Link>
@@ -151,7 +151,7 @@ const EditUser = () => {
             <p className="text-sm text-gray-600">Following</p>
           </div>
           <div className="hover:bg-gray-50 ">
-            <Link href={`/user-post/${userid}`}>
+            <Link href={`/admin/user-post/${userid}`}>
               <p className="font-semibold">{formData.businessPages?.length}</p>
               <p className="text-sm text-gray-600">Business Pages</p>
             </Link>
